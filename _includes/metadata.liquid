@@ -20,19 +20,84 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>
-  {% if site.title == 'blank' %}
-    {% capture title %}{{ author_name }}{% endcapture %}
-  {% else %}
-    {% capture title %}{{ site.title }}{% endcapture %}
-  {% endif %}
+{% if site.title == 'blank' %}
+  {% capture title %}{{ author_name }}{% endcapture %}
+{% else %}
+  {% capture title %}{{ site.title }}{% endcapture %}
+{% endif %}
+{% if page.title != null and page.title != '' %}
   {% if page.url == '/blog/index.html' %}
-    {{ page.title }} | {{ title }}
+    {% capture page_title %}{% t blog.nav_title %}{% endcapture %}
+  {% elsif page.url contains '/blog/' %}
+    {% assign page_title = page.title %}
+  {% else %}
+    {% assign is_collection = false %}
+    {% for collection in site.collections %}
+      {% assign collection_url_part = '/' | append: collection.label | append: '/' %}
+      {% if page.url contains contains_collection_url_part %}
+        {% assign is_collection = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if is_collection %}
+      {% assign page_title = page.title %}
+    {% else %}
+      {% capture page_title %}{% t page.title %}{% endcapture %}
+    {% endif %}
+  {% endif %}
+{% else %}
+  {% assign page_title = null %}
+{% endif %}
+{% if page_title %}
+  {% assign title_array = '' | split: ',' %}
+  {% assign splitted_description_by_space = page_title | split: ' ' %}
+  {% for outer_part in splitted_description_by_space %}
+    {% if outer_part contains '.' %}
+      {% capture contains_localization %}{% localization_exists {{ outer_part }} %}{% endcapture %}
+      {% if contains_localization == 'true' %}
+        {% capture temp_var %}{% t outer_part %}{% endcapture %}
+        {% assign title_array = title_array | push: temp_var %}
+      {% else %}
+        {% capture temp_var %}{{ outer_part }}{% endcapture %}
+        {% assign title_array = title_array | push: temp_var %}
+      {% endif %}
+    {% else %}
+      {% capture temp_var %}{{ outer_part }}{% endcapture %}
+      {% assign title_array = title_array | push: temp_var %}
+    {% endif %}
+  {% endfor %}
+  {% assign page_title = title_array | join: ' ' %}
+{% endif %}
+{% if page.description %}
+  {% capture contains_localization %}{% localization_exists {{ page.description }} %}{% endcapture %}
+  {% if contains_localization == 'true' %}
+    {% capture description %}{% t page.description %}{% endcapture %}
+  {% else %}
+    {% capture description %}{{ page.description }}{% endcapture %}
+  {% endif %}
+{% elsif site.description %}
+  {% capture contains_localization %}{% localization_exists {{ site.description }} %}{% endcapture %}
+  {% if contains_localization == 'true' %}
+    {% capture description %}{% t site.description %}{% endcapture %}
+  {% else %}
+    {% capture description %}{{ site.description }}{% endcapture %}
+  {% endif %}
+{% endif %}
+<title>
+  {% if page.url == '/blog/index.html' %}
+    {% t blog.nav_title %} | {{ title }}
+  {% elsif page.url contains '/blog/' %}
+    {% capture blog_year %}{{ page.url | slice: 0, 11 }}{% endcapture %}
+    {% if page.url == blog_year %}
+      {{ page.date | date: '%Y' }} | {{ title }}
+    {% else %}
+      {{ page_title }} | {{ title }}
+    {% endif %}
   {% elsif page.title != 'blank' and page.url != '/' %}
     {% if page.title == null or page.title == '' %}
       {{ page.date | date: '%Y' }} | {{ title }}
     {% else %}
-      {{ page.title }} | {{ title }}
+      {{ page_title }} | {{ title }}
     {% endif %}
   {% else %}
     {{ title }}
@@ -55,9 +120,9 @@
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
+  <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page_title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
-  <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:description" content="{{ description }}">
   {% if page.og_image or site.og_image %}
     <meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
   {% endif %}
@@ -65,8 +130,8 @@
 
   <!-- Twitter card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
-  <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta name="twitter:title" content="{% if page.title %}{{ page_title }}{% else %}{{ title }}{% endif %}">
+  <meta name="twitter:description" content="{{ description }}">
   {% if page.og_image or site.og_image %}
     <meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
   {% endif %}
@@ -229,8 +294,8 @@
         },
         "url": "{{ page.url | prepend: site.baseurl | prepend: site.url }}",
         "@type": "{% if is_blog_post %}BlogPosting{% else %}WebSite{% endif %}",
-        "description": "{% if page.description %}{{ page.description }}{% else if site.description %}{{ site.description }}{% endif %}",
-        "headline": "{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}",
+        "description": "{{ description }}",
+        "headline": "{% if page.title %}{{ page_title }}{% else %}{{ site.title }}{% endif %}",
         {% if sameaslinks != blank %}
         "sameAs": {{ sameaslinks }},
         {% endif %}

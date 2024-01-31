@@ -50,8 +50,8 @@
 
           <!-- About -->
           <li class="nav-item {% if page.permalink == '/' %}active{% endif %}">
-            <a class="nav-link" href="{{ '/' | relative_url }}">
-              {{- about_title }}
+            <a class="nav-link" href="{{ '/' | prepend: site.baseurl }}">
+              {%- t about_title %}
               {% if page.permalink == '/' %}
                 <span class="sr-only">(current)</span>
               {% endif %}
@@ -79,7 +79,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    {{- p.title }}
+                    {%- t p.title %}
                     {% if page.title == p.title or has_active_child %}
                       <span class="sr-only">(current)</span>
                     {% endif %}
@@ -89,8 +89,11 @@
                       {% if child.title == 'divider' %}
                         <div class="dropdown-divider"></div>
                       {% else %}
-                        <a class="dropdown-item {% if page.title == child.title %}active{% endif %}" href="{{ child.permalink | relative_url }}">
-                          {{- child.title -}}
+                        <a
+                          class="dropdown-item {% if page.title == child.title %}active{% endif %}"
+                          href="{{ child.permalink | prepend: site.baseurl }}"
+                        >
+                          {%- t child.title -%}
                         </a>
                       {% endif %}
                     {% endfor %}
@@ -99,8 +102,8 @@
               {% else %}
                 <li class="nav-item {% if page.url contains p.permalink %}active{% endif %}">
                   {% if p.permalink contains '/blog/' %}{% assign url = '/blog/' %} {% else %}{% assign url = p.url %}{% endif %}
-                  <a class="nav-link" href="{{ url | relative_url }}">
-                    {{- p.title }}
+                  <a class="nav-link" href="{{ url | prepend: site.baseurl }}">
+                    {%- t p.title %}
                     {% if page.url contains p.url %}
                       <span class="sr-only">(current)</span>
                     {% endif %}
@@ -109,6 +112,51 @@
               {% endif %}
             {% endif %}
           {% endfor %}
+          <!-- Toogle language -->
+          {% if site.enable_localization and site.languages.size >= 2 %}
+            {% if site.languages.size == 2 %}
+              <li class="nav-item active">
+                {% if site.lang == site.languages.first %}
+                  <a class="nav-link" href="{{site.baseurl_root}}/{{site.languages.last}}{{page.url}}">{{ site.languages.last | upcase }}</a>
+                {% elsif site.lang == site.languages.last %}
+                  <a class="nav-link" href="{{site.baseurl_root}}{{ page.url }}">{{ site.languages.first | upcase }}</a>
+                {% endif %}
+              </li>
+            {% else %}
+              <li class="nav-item dropdown {% if page.title == p.title %}active{% endif %}">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {{- site.lang | upcase }}
+                  {% if page.title == p.title %}
+                    <span class="sr-only">(current)</span>
+                  {% endif %}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  {% assign language_set = false %}
+                  {% for l in site.languages %}
+                    {% if l != site.lang %}
+                      {% if language_set %}
+                        <div class="dropdown-divider"></div>
+                      {% endif %}
+                      {% if l == site.languages.first %}
+                        <a class="dropdown-item" href="{{site.baseurl_root}}{{page.url}}">{{ l | upcase }}</a>
+                      {% else %}
+                        <a class="dropdown-item" href="{{site.baseurl_root}}/{{l}}{{page.url}}">{{ l | upcase }}</a>
+                      {% endif %}
+                      {% assign language_set = true %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </li>
+            {% endif %}
+          {% endif %}
           {% if site.enable_darkmode %}
             <!-- Toogle theme mode -->
             <li class="toggle-container">
