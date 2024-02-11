@@ -9,7 +9,7 @@ last_name: Wu
 email: robotics_qi@sjtu.edu.cn
 keywords: CQUPT,  BUPT, SJTU, SLAM Reasearcher  # add your own keywords or leave empty
 
-lang: en # the main language of your site (for example: en, fr, cn, ru, etc.)
+lang: zh # the main language of your site (for example: en, fr, cn, ru, etc.)
 icon: ⚛️ # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
 url: https://gatsby23.github.io # the base hostname & protocol for your site
