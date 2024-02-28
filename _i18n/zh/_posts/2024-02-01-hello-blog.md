@@ -1,10 +1,15 @@
 ---
-layout: post
-title: 你好，SLAM2.0.
+layout: distill
+title: Hello SLAM.
 date: 2024-02-01 00:00:00
-description: The introduction of this blog.
-tags: VIO
-categories: Research
+description: ''
+authors:
+  - name: 吴奇 
+    affiliations: 
+      name: SJTU
+bibliography: blogs.bib
+tags: VIO,SLAM
+categories: Discussion
 featured: false
 comments: true
 ---

@@ -8,8 +8,10 @@ main:
     Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
     Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
   more_info: >
-    <p>这张照片拍摄于六年前，记录我还有头发时的样子.</p>
-  subtitle: <a href='#'>所属机构</a>. 博士生@上海交通大学.
+    <p>联系信息: </p>
+    <p>Address: </p>
+    <p>E-mail: </p>
+  subtitle: <a href='#'>所属机构</a>. 教授/博导@上海交通大学.
 titles:
   about: about
   blog: blog
@@ -72,8 +74,11 @@ months:
 news:
   empty: No news so far...
   titles:
-    news1: "Our work has been accepted by the ICCV(International Conference on Computer Vision) journal.! :sparkles: :smile:"
-    news2: "Our work has been accepted by the TIE(Transactions on Industrial Electronics) journal.! :sparkles: :smile:"
+    news1: "我们的工作被ICCV(International Conference on Computer Vision)接收.! :sparkles: :smile:"
+    news2: "我们的工作被TIE(Transactions on Industrial Electronics)接收.！ :sparkles: :smile:"
+    news3: "我们团队成果荣获卫星导航定位科技进步**一等奖**.! :sparkles: :smile:"
+    news4: "我们的工作被ICASSP(International Conference on Acoustics, Speech and Signal Processing)接收.:sparkles: :smile:"
+    news5: "我们的工作被CVPR(IEEE/CVF Conference on Computer Vision and Pattern Recognition)接收.:sparkles: :smile:"
 pagination:
   newer: Newer
   older: Older

@@ -1,0 +1,1 @@
+Our team's achievements have won the **first prize** in the advancement of satellite navigation and positioning technology.! :sparkles: :smile:
