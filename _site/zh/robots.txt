@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://ling.pei.github.io/zh/sitemap.xml
